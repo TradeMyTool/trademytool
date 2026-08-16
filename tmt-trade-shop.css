@@ -31,3 +31,18 @@ header,.layout{max-width:1320px;margin-left:auto;margin-right:auto;padding-left:
   header,.layout{padding-left:8px;padding-right:8px}
   .ts-ship-banner,.community-box{max-width:none;margin-left:8px;margin-right:8px}
 }
+
+/* Date an offer was received, shown in the seller's private offers list */
+.offer-date{color:#888;font-size:11px;margin-top:3px}
+
+/* iOS zooms in whenever a text field is smaller than 16px, which knocks the
+   whole listing panel out of alignment. Bump the form fields on small screens
+   only - desktop keeps the original sizes. */
+@media (max-width:860px){
+  .offer-section input,
+  #orderTotalBox .comm-value input,
+  .filter-row input,
+  .filter-row select,
+  .trade-select,
+  input,select,textarea{font-size:16px}
+}
