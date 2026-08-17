@@ -137,6 +137,50 @@ if (typeof auth !== "undefined") {
   });
 })();
 
+/* Buy Now opens the listing straight into the payment panel: the offer form
+   and the contact buttons are hidden so it reads as a purchase, not the same
+   everything-panel that View and Good Offer open.
+   Defined here rather than in the page, which is at its size limit. */
+(function () {
+  var viewer = null;
+
+  function clearPayMode() {
+    if (!viewer) viewer = document.getElementById("viewer");
+    if (viewer) viewer.classList.remove("tmt-pay-mode");
+  }
+
+  // Any normal open (View / Good Offer) shows the full panel.
+  var origShow = window.showViewer;
+  if (typeof origShow === "function") {
+    window.showViewer = function (item) {
+      clearPayMode();
+      return origShow.apply(this, arguments);
+    };
+  }
+
+  window.buyNow = function (item) {
+    if (typeof window.showViewer === "function") window.showViewer(item);
+    setTimeout(function () {
+      if (!viewer) viewer = document.getElementById("viewer");
+      if (!viewer) return;
+      viewer.classList.add("tmt-pay-mode");
+      var pay = document.getElementById("paySection");
+      var panel = viewer.querySelector(".viewer-panel");
+      if (pay && panel) {
+        try { panel.scrollTop = Math.max(0, pay.offsetTop - panel.offsetTop - 8); }
+        catch (e) {}
+      }
+    }, 60);
+  };
+
+  // Closing the panel resets it for next time.
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (!t) return;
+    if (t.id === "closeViewer" || t.id === "viewer") clearPayMode();
+  }, true);
+})();
+
 /* "X Listings Available" button in the hero - updates itself whenever the
    listings list re-renders, and jumps straight down to it on click (handy
    on mobile, where the Post Listing form sits above the listings). */
