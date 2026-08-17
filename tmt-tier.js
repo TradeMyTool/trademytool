@@ -1,4 +1,4 @@
-/* TradeMyTool — Seller Tier System
+/* TradeMyTool - Seller Tier System
    Loaded on trade-shop.html after Firebase is already initialized there.
    Relies on the page's existing global `db`, `auth`, `activeListing`, `$()`.
 
@@ -14,7 +14,7 @@
 
    NOTE: this file deliberately does NOT write the user's email address
    into the `users` collection. That collection is publicly readable so
-   tier badges can show on listings, so nothing personal goes in it —
+   tier badges can show on listings, so nothing personal goes in it -
    only the sold count and the tier name. */
 
 var TMT_TIERS = { gold: 20, silver: 10, bronze: 5 };
@@ -51,11 +51,11 @@ function tmtUpdateTier(uid) {
         { itemsSoldCount: count, tier: tmtTierFor(count) },
         { merge: true }
       ).catch(function (e) {
-        if (window.console) console.warn("TMT: could not save tier —", e && e.code);
+        if (window.console) console.warn("TMT: could not save tier -", e && e.code);
       });
     })
     .catch(function (e) {
-      if (window.console) console.warn("TMT: could not count sales —", e && e.code);
+      if (window.console) console.warn("TMT: could not count sales -", e && e.code);
     });
 }
 
@@ -120,7 +120,24 @@ if (typeof auth !== "undefined") {
   });
 }
 
-/* "X Listings Available" button in the hero — updates itself whenever the
+/* When a field inside the listing panel is tapped on mobile, the keyboard
+   opens and shifts the view - the panel can end up above the visible area.
+   Wait for the keyboard, then bring the focused field back into view. */
+(function () {
+  document.addEventListener("focusin", function (e) {
+    var el = e.target;
+    if (!el || !el.closest) return;
+    if (!el.closest(".viewer")) return;
+    var tag = (el.tagName || "").toLowerCase();
+    if (tag !== "input" && tag !== "textarea" && tag !== "select") return;
+    setTimeout(function () {
+      try { el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+      catch (x) { try { el.scrollIntoView(); } catch (y) {} }
+    }, 350);
+  });
+})();
+
+/* "X Listings Available" button in the hero - updates itself whenever the
    listings list re-renders, and jumps straight down to it on click (handy
    on mobile, where the Post Listing form sits above the listings). */
 (function () {
