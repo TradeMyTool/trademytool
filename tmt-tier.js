@@ -98,6 +98,19 @@ function tmtShowTier(uid) {
   }
 
   function render() {
+    // Whole banner block - the page just supplies an empty container,
+    // which keeps the Trade Shop page under GoDaddy's size limit.
+    var banners = document.querySelectorAll(".tmt-tier-banner");
+    for (var b = 0; b < banners.length; b++) {
+      if (banners[b].getAttribute("data-tmt-tiers")) continue;
+      banners[b].setAttribute("data-tmt-tiers", "1");
+      banners[b].innerHTML =
+        "<h2>\uD83C\uDF89 Totally Free - Unlimited Listings</h2>" +
+        "<p>Earn your seller tier as you sell - your badge shows next to " +
+        "your name on every listing.</p>" +
+        '<div class="ts-ship-pills">' + markup() + "</div>";
+    }
+    // Any standalone pill container elsewhere on the page.
     var pills = document.querySelectorAll(".ts-ship-pills");
     for (var i = 0; i < pills.length; i++) {
       if (pills[i].getAttribute("data-tmt-tiers")) continue;
